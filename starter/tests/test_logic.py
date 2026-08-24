@@ -1,4 +1,4 @@
-from sudoku_logic import EMPTY, SIZE, create_empty_board, generate_puzzle, is_safe
+from sudoku_logic import EMPTY, SIZE, count_solutions, create_empty_board, generate_puzzle, is_safe
 
 
 def _has_valid_rows_and_columns(board):
@@ -62,3 +62,9 @@ def test_generate_puzzle_returns_valid_puzzle_and_solution():
     assert _has_valid_boxes(solution)
     assert _has_valid_rows_and_columns(puzzle)
     assert _has_valid_boxes(puzzle)
+
+
+def test_generate_puzzle_has_exactly_one_unique_solution():
+    puzzle, _ = generate_puzzle(35)
+
+    assert count_solutions(puzzle) == 1
