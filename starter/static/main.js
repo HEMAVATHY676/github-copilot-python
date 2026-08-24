@@ -3,6 +3,8 @@ const SIZE = 9;
 let puzzle = [];
 let timerInterval = null;
 let elapsedSeconds = 0;
+let currentDifficulty = 'Medium';
+let gameCompleted = false;
 
 function startTimer() {
   clearInterval(timerInterval);
@@ -12,6 +14,47 @@ function startTimer() {
     elapsedSeconds += 1;
     document.getElementById('timer').innerText = `Time: ${elapsedSeconds} seconds`;
   }, 1000);
+}
+
+function getScores() {
+  return JSON.parse(localStorage.getItem('sudokuScores')) || [];
+}
+
+function saveScore() {
+  const playerName =
+    document.getElementById('player-name').value.trim() || 'Anonymous';
+
+  const scores = getScores();
+
+  scores.push({
+    name: playerName,
+    time: elapsedSeconds,
+    difficulty: currentDifficulty
+  });
+
+  scores.sort((a, b) => a.time - b.time);
+
+  const topTen = scores.slice(0, 10);
+
+  localStorage.setItem('sudokuScores', JSON.stringify(topTen));
+
+  renderScores();
+}
+
+function renderScores() {
+  const scoreList = document.getElementById('score-list');
+  const scores = getScores();
+
+  scoreList.innerHTML = '';
+
+  scores.forEach((score) => {
+    const item = document.createElement('li');
+
+    item.textContent =
+      `${score.name} - ${score.time} seconds - ${score.difficulty}`;
+
+    scoreList.appendChild(item);
+  });
 }
 
 function createBoardElement() {
@@ -72,13 +115,19 @@ function getCurrentBoard() {
   return board;
 }
 
-async function newGame() {
-  const difficulty = document.getElementById('difficulty').value;
-  const res = await fetch(`/new?difficulty=${encodeURIComponent(difficulty)}`);
-  const data = await res.json();
-  renderPuzzle(data.puzzle);
-  startTimer();
-  document.getElementById('message').innerText = '';
+ async function newGame() {
+ const difficulty = document.getElementById('difficulty').value;
+
+ currentDifficulty = difficulty;
+ gameCompleted = false;
+
+ const res = await fetch(
+   `/new?difficulty=${encodeURIComponent(difficulty)}`
+ );
+ const data = await res.json();
+ renderPuzzle(data.puzzle);
+ startTimer();
+ document.getElementById('message').innerText = '';
 }
 
 async function checkSolution() {
@@ -107,9 +156,15 @@ async function checkSolution() {
     }
   }
   if (incorrect.size === 0) {
-    msg.style.color = '#388e3c';
-    msg.innerText = 'Congratulations! You solved it!';
-  } else {
+  msg.style.color = '#388e3c';
+  msg.innerText = 'Congratulations! You solved it!';
+
+  if (!gameCompleted) {
+    gameCompleted = true;
+    clearInterval(timerInterval);
+    saveScore();
+  }
+} else {
     msg.style.color = '#d32f2f';
     msg.innerText = 'Some cells are incorrect.';
   }
@@ -142,6 +197,7 @@ window.addEventListener('load', () => {
   document.getElementById('new-game').addEventListener('click', newGame);
   document.getElementById('check-solution').addEventListener('click', checkSolution);
   document.getElementById('hint').addEventListener('click', requestHint);
-  // initialize
+
+  renderScores();
   newGame();
 });
