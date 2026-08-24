@@ -5,6 +5,7 @@ let timerInterval = null;
 let elapsedSeconds = 0;
 let currentDifficulty = 'Medium';
 let gameCompleted = false;
+let hintsUsed = 0;
 
 function startTimer() {
   clearInterval(timerInterval);
@@ -29,10 +30,11 @@ function saveScore() {
   scores.push({
     name: playerName,
     time: elapsedSeconds,
-    difficulty: currentDifficulty
+    difficulty: currentDifficulty,
+    hintsUsed
   });
 
-  scores.sort((a, b) => a.time - b.time);
+  scores.sort((a, b) => a.time - b.time || a.hintsUsed - b.hintsUsed);
 
   const topTen = scores.slice(0, 10);
 
@@ -51,7 +53,7 @@ function renderScores() {
     const item = document.createElement('li');
 
     item.textContent =
-      `${score.name} - ${score.time} seconds - ${score.difficulty}`;
+      `${score.name} - ${score.time} seconds - ${score.difficulty} - Hints: ${score.hintsUsed ?? 0}`;
 
     scoreList.appendChild(item);
   });
@@ -120,6 +122,7 @@ function getCurrentBoard() {
 
  currentDifficulty = difficulty;
  gameCompleted = false;
+ hintsUsed = 0;
 
  const res = await fetch(
    `/new?difficulty=${encodeURIComponent(difficulty)}`
@@ -187,9 +190,12 @@ async function requestHint() {
   const input = document.querySelector(
     `.sudoku-cell[data-row="${data.row}"][data-col="${data.col}"]`
   );
-  input.value = data.value;
-  input.disabled = true;
-  input.className = 'sudoku-cell prefilled';
+  if (input) {
+    hintsUsed += 1;
+    input.value = data.value;
+    input.disabled = true;
+    input.className = 'sudoku-cell prefilled';
+  }
 }
 
 // Wire buttons
