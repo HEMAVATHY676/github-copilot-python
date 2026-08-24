@@ -7,20 +7,41 @@
 </head>
 <body>
   <h1>Sudoku Game</h1>
+
+  <div class="player-info">
+    <label for="player-name">Player:</label>
+    <input
+      type="text"
+      id="player-name"
+      maxlength="20"
+      placeholder="Enter your name"
+    >
+  </div>
+
   <div id="sudoku-board"></div>
+
   <div class="controls">
     <button id="new-game">New Game</button>
+
     <label for="difficulty">Difficulty:</label>
     <select id="difficulty">
       <option value="Easy">Easy</option>
       <option value="Medium" selected>Medium</option>
       <option value="Hard">Hard</option>
     </select>
+
     <button id="check-solution">Check Solution</button>
     <button id="hint">Hint</button>
+
     <span id="timer" aria-live="polite">Time: 0 seconds</span>
     <span id="message"></span>
   </div>
+
+  <section id="scoreboard">
+    <h2>Top 10 Fastest Times</h2>
+    <ol id="score-list"></ol>
+  </section>
+
   <script src="/static/main.js"></script>
 </body>
 </html>
