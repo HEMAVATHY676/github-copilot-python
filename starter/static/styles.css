@@ -48,6 +48,26 @@ h1 {
     background: #ffcdd2;
 }
 
+:root {
+    --sudoku-block-light: #f8f8f8;
+    --sudoku-block-dark: #ececec;
+}
+
+.sudoku-row:nth-child(3n + 1) .sudoku-cell:nth-child(-n + 3),
+.sudoku-row:nth-child(3n + 1) .sudoku-cell:nth-child(n + 7):nth-child(-n + 9),
+.sudoku-row:nth-child(3n + 2) .sudoku-cell:nth-child(n + 4):nth-child(-n + 6),
+.sudoku-row:nth-child(3n + 3) .sudoku-cell:nth-child(-n + 3),
+.sudoku-row:nth-child(3n + 3) .sudoku-cell:nth-child(n + 7):nth-child(-n + 9) {
+    background-color: var(--sudoku-block-light);
+}
+
+.sudoku-row:nth-child(3n + 1) .sudoku-cell:nth-child(n + 4):nth-child(-n + 6),
+.sudoku-row:nth-child(3n + 2) .sudoku-cell:nth-child(-n + 3),
+.sudoku-row:nth-child(3n + 2) .sudoku-cell:nth-child(n + 7):nth-child(-n + 9),
+.sudoku-row:nth-child(3n + 3) .sudoku-cell:nth-child(n + 4):nth-child(-n + 6) {
+    background-color: var(--sudoku-block-dark);
+}
+
 .sudoku-cell:nth-child(3),
 .sudoku-cell:nth-child(6) {
     border-right: 3px solid #333;
@@ -82,4 +102,63 @@ button:hover {
     margin-left: 20px;
     font-size: 16px;
     color: #d32f2f;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --sudoku-block-light: #2d2d2d;
+        --sudoku-block-dark: #1f1f1f;
+    }
+
+    body {
+        background: #121212;
+        color: #f1f1f1;
+    }
+
+    h1 {
+        color: #f1f1f1;
+    }
+
+    #sudoku-board {
+        background: #1e1e1e;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    }
+
+    .sudoku-cell {
+        background: #2a2a2a;
+        color: #f1f1f1;
+        border-color: #555;
+    }
+
+    .sudoku-cell.prefilled {
+        background: #3a3a3a;
+        color: #f1f1f1;
+    }
+
+    .sudoku-cell:focus {
+        background: #1f3a46;
+    }
+
+    .sudoku-cell.incorrect {
+        background: #5e2a2a;
+    }
+
+    .sudoku-cell:nth-child(3),
+    .sudoku-cell:nth-child(6) {
+        border-right-color: #d0d0d0;
+    }
+
+    .sudoku-row:nth-child(3) .sudoku-cell,
+    .sudoku-row:nth-child(6) .sudoku-cell {
+        border-bottom-color: #d0d0d0;
+    }
+
+    button {
+        background: #90caf9;
+        color: #111;
+    }
+
+    button:hover {
+        background: #bbdefb;
+    }
 }
