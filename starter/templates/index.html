@@ -10,7 +10,15 @@
   <div id="sudoku-board"></div>
   <div class="controls">
     <button id="new-game">New Game</button>
+    <label for="difficulty">Difficulty:</label>
+    <select id="difficulty">
+      <option value="Easy">Easy</option>
+      <option value="Medium" selected>Medium</option>
+      <option value="Hard">Hard</option>
+    </select>
     <button id="check-solution">Check Solution</button>
+    <button id="hint">Hint</button>
+    <span id="timer" aria-live="polite">Time: 0 seconds</span>
     <span id="message"></span>
   </div>
   <script src="/static/main.js"></script>
