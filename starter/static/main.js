@@ -198,12 +198,34 @@ async function requestHint() {
   }
 }
 
+function toggleDarkMode() {
+  const isDark = document.body.classList.toggle('dark-mode');
+  localStorage.setItem('sudokuDarkMode', isDark ? 'dark' : 'light');
+
+  const button = document.getElementById('dark-mode-toggle');
+  button.innerText = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
+}
+
+function loadTheme() {
+  const savedTheme = localStorage.getItem('sudokuDarkMode');
+  const button = document.getElementById('dark-mode-toggle');
+
+  if (savedTheme === 'dark') {
+    document.body.classList.add('dark-mode');
+    button.innerText = '☀️ Light Mode';
+  } else {
+    button.innerText = '🌙 Dark Mode';
+  }
+}
+
 // Wire buttons
 window.addEventListener('load', () => {
   document.getElementById('new-game').addEventListener('click', newGame);
   document.getElementById('check-solution').addEventListener('click', checkSolution);
   document.getElementById('hint').addEventListener('click', requestHint);
+  document.getElementById('dark-mode-toggle').addEventListener('click', toggleDarkMode);
 
+  loadTheme();
   renderScores();
   newGame();
 });
